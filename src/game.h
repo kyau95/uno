@@ -20,13 +20,16 @@ public:
   ~Game();
 
   void deal_initial_hand();
-  Player* get_first_player() const;
+  Player* get_first_player();
+  Player* get_current_player() const;
   void setup();
+  void run();
 
   Deck get_deck() const;
   std::vector<Card*> get_discard_pile() const;
   std::vector<Player*> get_players() const;
 
+  // Print current game state
   friend std::ostream& operator<<(std::ostream& out, const Game& rhs) {
     for (Player* p : rhs.m_player_list) {
       out << *p << '\n';

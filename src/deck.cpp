@@ -13,6 +13,9 @@ Deck::Deck() {
 }
 
 Deck::~Deck() {
+  for (Card* c : m_cards) {
+    delete c;
+  }
 }
 
 void Deck::build_deck() {

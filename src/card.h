@@ -31,7 +31,7 @@ public:
   bool operator==(const Card& rhs);
   bool operator!=(const Card& rhs);
 
-  std::string to_string() const;
+  // Getters
   const Color get_color() const;
   const Rank get_rank() const;
 
@@ -50,7 +50,6 @@ public:
     }
     switch (rhs.m_rank) {
       case NUMBER:
-        // Need to convert to ascii value for printing
         out << rhs.m_number; break;
       case SKIP:
         out << "S"; break;
