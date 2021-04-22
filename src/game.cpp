@@ -17,6 +17,10 @@ Game::~Game() {
   }
 }
 
+Card *Game::peek_top_discard() const {
+  return m_discard_pile[m_discard_pile.size() - 1];
+}
+
 void Game::deal_initial_hand() {
   for (Player *p : m_player_list) {
     p->add_cards(m_deck->draw_cards(INITIAL_HAND_SIZE));
@@ -36,11 +40,9 @@ Player *Game::get_first_player() {
 void Game::setup() {
   deal_initial_hand();
   current_player = get_current_player();
-  std::cout << "First player is: " << current_player->get_name() << std::endl;
 }
 
 void Game::run() {
-
 }
 
 // GETTERS

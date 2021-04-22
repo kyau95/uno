@@ -21,6 +21,9 @@ public:
   void add_card(Card* card);
   void add_cards(std::vector<Card*> cards);
 
+  bool has_uno() const;
+  bool has_empty_hand() const;
+
   // Getters
   std::string get_name() const;
   std::vector<Card*> get_hand() const;

@@ -40,6 +40,14 @@ void Player::add_cards(std::vector<Card*> cards) {
   }
 }
 
+bool Player::has_uno() const {
+  return m_hand.size() == 1;
+}
+
+bool Player::has_empty_hand() const {
+  return m_hand.empty();
+}
+
 // GETTERS
 
 std::string Player::get_name() const {

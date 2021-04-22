@@ -11,12 +11,14 @@
 #include <vector>
 
 enum Direction { FORWARD, BACKWARD };
+enum State { SETUP, PLAY, GAMEOVER, END };
 
 class Game {
 public:
   Game();
   ~Game();
 
+  Card *peek_top_discard() const;
   void deal_initial_hand();
   Player *get_first_player();
   void setup();
