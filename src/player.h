@@ -15,6 +15,9 @@ public:
   Player(std::string name);
   ~Player();
 
+  Player(const Player& rhs);
+  Player& operator=(const Player& rhs);
+
   void add_card(Card* card);
   void add_cards(std::vector<Card*> cards);
 

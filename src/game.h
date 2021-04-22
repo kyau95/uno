@@ -6,13 +6,11 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include <vector>
 #include "deck.h"
 #include "player.h"
+#include <vector>
 
-enum Direction {
-  FORWARD, BACKWARD
-};
+enum Direction { FORWARD, BACKWARD };
 
 class Game {
 public:
@@ -20,18 +18,18 @@ public:
   ~Game();
 
   void deal_initial_hand();
-  Player* get_first_player();
-  Player* get_current_player() const;
+  Player *get_first_player();
   void setup();
   void run();
 
-  Deck get_deck() const;
-  std::vector<Card*> get_discard_pile() const;
-  std::vector<Player*> get_players() const;
+  Player *get_current_player() const;
+  Deck *get_deck() const;
+  std::vector<Card *> get_discard_pile() const;
+  std::vector<Player *> get_players() const;
 
   // Print current game state
-  friend std::ostream& operator<<(std::ostream& out, const Game& rhs) {
-    for (Player* p : rhs.m_player_list) {
+  friend std::ostream &operator<<(std::ostream &out, const Game &rhs) {
+    for (Player *p : rhs.m_player_list) {
       out << *p << '\n';
     }
     return out;
@@ -39,15 +37,17 @@ public:
 
 private:
   int m_current_index;
-  Deck m_deck;
-  std::vector<Card*> m_discard_pile;
-  std::vector<Player*> m_player_list{
-   new Player("P1"), new Player("P2"), new Player("P3"), new Player("P4")
-  };
+  Player *current_player;
+  Deck *m_deck;
+  std::vector<Card *> m_discard_pile;
+  std::vector<Player *> m_player_list{new Player("P1"), new Player("P2"),
+                                      new Player("P3"), new Player("P4")};
   Direction game_dir;
 
-  static const size_t INITIAL_HAND_SIZE = 7;
+  Color valid_color;
+  Rank valid_rank;
 
+  static const size_t INITIAL_HAND_SIZE = 7;
 };
 
 #endif // GAME_H
