@@ -12,10 +12,7 @@ Deck::Deck() {
   shuffle();
 }
 
-Deck::~Deck() {
-  for (Card *c : m_cards)
-    delete c;
-}
+Deck::~Deck() { clear_deck(); }
 
 // Build the entire deck of UNO cards
 void Deck::build_deck() {
@@ -49,6 +46,9 @@ void Deck::build_deck() {
 }
 
 void Deck::shuffle() {
+  // Random generator shuffles only within the current deck size
+  // Reasoning cause when replacing the deck, it is not always the full 108
+  // cards
   std::random_device device;
   std::mt19937 r_gen(device());
   std::uniform_int_distribution<int> dist(0, m_cards.size() - 1);
@@ -94,6 +94,11 @@ std::vector<Card *> Deck::draw_cards(int number_cards) {
     m_cards.pop_back();
   }
   return container;
+}
+
+void Deck::clear_deck() {
+  for (Card *c : m_cards)
+    delete c;
 }
 
 // GETTERS

@@ -20,6 +20,7 @@ public:
 
   void add_card(Card* card);
   void add_cards(std::vector<Card*> cards);
+  void clear_hand();
 
   bool has_uno() const;
   bool has_empty_hand() const;

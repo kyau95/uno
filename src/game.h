@@ -11,7 +11,7 @@
 #include <vector>
 
 enum Direction { FORWARD, BACKWARD };
-enum State { SETUP, PLAY, GAMEOVER, END };
+enum State { SETUP, PLAY, GAMEOVER, QUIT };
 
 class Game {
 public:
@@ -21,7 +21,7 @@ public:
   Card *peek_top_discard() const;
   void deal_initial_hand();
   Player *get_first_player();
-  void setup();
+  void reset_game();
   void run();
 
   Player *get_current_player() const;
@@ -38,14 +38,15 @@ public:
   }
 
 private:
-  int m_current_index;
-  Player *current_player;
-  Deck *m_deck;
+  int m_current_index = -1;
+  Player *current_player = nullptr;
+  Card *top_card = nullptr;
+  Deck *m_deck = nullptr;
   std::vector<Card *> m_discard_pile;
   std::vector<Player *> m_player_list{new Player("P1"), new Player("P2"),
                                       new Player("P3"), new Player("P4")};
-  Direction game_dir;
-
+  Direction direction;
+  State game_state;
   Color valid_color;
   Rank valid_rank;
 

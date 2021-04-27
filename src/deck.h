@@ -20,6 +20,7 @@ public:
   void replace_deck(std::vector<Card *>);
   Card *draw_card();
   std::vector<Card *> draw_cards(int);
+  void clear_deck();
 
   // getters
   std::vector<Card *> get_deck() const;

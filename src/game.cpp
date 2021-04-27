@@ -6,15 +6,18 @@
 #include "game.h"
 #include <random>
 
-Game::Game() { setup(); }
+Game::Game() : game_state(SETUP), direction(FORWARD) {
+  current_player = get_first_player();
+  m_deck = new Deck();
+}
 
 Game::~Game() {
-  for (Player *p : m_player_list) {
+  for (Player *p : m_player_list)
     delete p;
-  }
-  for (Card *c : m_discard_pile) {
+  for (Card *c : m_discard_pile)
     delete c;
-  }
+  delete m_deck;
+  delete top_card;
 }
 
 Card *Game::peek_top_discard() const {
@@ -37,12 +40,27 @@ Player *Game::get_first_player() {
   return m_player_list[m_current_index];
 }
 
-void Game::setup() {
-  deal_initial_hand();
-  current_player = get_current_player();
+void Game::reset_game() {
+  for (Card *card : m_discard_pile)
+    delete card;
+  m_discard_pile.clear();
+  for (Player *player : m_player_list)
+    player->clear_hand();
+  m_player_list.clear();
+  m_player_list = {new Player("P1"), new Player("P2"), new Player("P3"),
+                   new Player("P4")};
+  delete m_deck;
+  m_deck = new Deck();
+  delete top_card;
+  direction = FORWARD;
+  game_state = SETUP;
 }
 
 void Game::run() {
+  while (game_state != QUIT) {
+    
+    game_state = QUIT;
+  }
 }
 
 // GETTERS
