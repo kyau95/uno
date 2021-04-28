@@ -18,10 +18,6 @@ public:
   Game();
   ~Game();
 
-  Card *peek_top_discard() const;
-  void deal_initial_hand();
-  Player *get_first_player();
-  void reset_game();
   void run();
 
   Player *get_current_player() const;
@@ -40,7 +36,6 @@ public:
 private:
   int m_current_index = -1;
   Player *current_player = nullptr;
-  Card *top_card = nullptr;
   Deck *m_deck = nullptr;
   std::vector<Card *> m_discard_pile;
   std::vector<Player *> m_player_list{new Player("P1"), new Player("P2"),
@@ -51,6 +46,15 @@ private:
   Rank valid_rank;
 
   static const size_t INITIAL_HAND_SIZE = 7;
+
+  void print_discard_pile() const;
+  void deal_first_card();
+  Card *peek_top_discard() const;
+  void deal_initial_hand();
+  Player *get_first_player();
+  void reset_game();
+  void setup();
+
 };
 
 #endif // GAME_H

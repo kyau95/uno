@@ -17,7 +17,34 @@ Game::~Game() {
   for (Card *c : m_discard_pile)
     delete c;
   delete m_deck;
-  delete top_card;
+}
+
+void Game::run() {
+  setup();
+  while (game_state != QUIT) {
+    game_state = QUIT;
+  }
+}
+
+void Game::print_discard_pile() const {
+  for (Card *card : m_discard_pile)
+    std::cout << *card << ' ';
+  std::cout << '\n';
+}
+
+void Game::deal_first_card() {
+  // Deals the first card of the game and sets the valid color and valid rank
+  // Recurses until the card is not a wild card
+  m_discard_pile.push_back(m_deck->draw_card());
+  if (peek_top_discard()->get_color() == NONE) {
+    // std::cout << "First card was a WILD card! Trying again!\n";
+    deal_first_card();
+  }
+  else {
+    // print_discard_pile();
+    valid_color = peek_top_discard()->get_color();
+    valid_rank = peek_top_discard()->get_rank();
+  }
 }
 
 Card *Game::peek_top_discard() const {
@@ -25,9 +52,8 @@ Card *Game::peek_top_discard() const {
 }
 
 void Game::deal_initial_hand() {
-  for (Player *p : m_player_list) {
+  for (Player *p : m_player_list)
     p->add_cards(m_deck->draw_cards(INITIAL_HAND_SIZE));
-  }
 }
 
 Player *Game::get_first_player() {
@@ -51,16 +77,23 @@ void Game::reset_game() {
                    new Player("P4")};
   delete m_deck;
   m_deck = new Deck();
-  delete top_card;
   direction = FORWARD;
   game_state = SETUP;
 }
 
-void Game::run() {
-  while (game_state != QUIT) {
-    
-    game_state = QUIT;
-  }
+void Game::setup() {
+  /* STUFF THAT HAPPENS BEFORE FOR THE GAME EVEN STARTS
+   * Hands are dealt to all players (7 cards each)
+   * TODO: A top card is drawn (must not be a wild card)
+   * The first player is chosen
+   * Direction is set to FORWARD
+   * Game state switches to PLAY phase
+   */
+  deal_initial_hand();
+  current_player = get_first_player();
+  deal_first_card();
+  std::cout << "Top card is: " << *peek_top_discard() << std::endl;
+  std::cout << "Player " << current_player->get_name() << "'s turn!\n";
 }
 
 // GETTERS
