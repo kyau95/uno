@@ -5,9 +5,9 @@
 
 #include "game.h"
 #include <random>
+#include <unistd.h>
 
 Game::Game() : game_state(SETUP), direction(FORWARD) {
-  current_player = get_first_player();
   m_deck = new Deck();
 }
 
@@ -21,9 +21,30 @@ Game::~Game() {
 
 void Game::run() {
   setup();
-  while (game_state != QUIT) {
-    game_state = QUIT;
+  int c = 0;
+  while (game_state != QUIT && c < 10) {
+    std::cout << "Player " << current_player->get_name() << "'s turn!\n";
+    print_top_card();
+    std::cout << current_player->get_name() << "'s hand\n";
+    current_player->show_hand();
+    int player_card_choice = current_player->find_valid_card(peek_top_discard());
+    if (player_card_choice >= 0) {
+      Card *temp = current_player->play_card(player_card_choice);
+      m_discard_pile.push_back(temp);
+      std::cout << current_player->get_name() << " played " << *temp << "\n\n";
+    }
+    else {
+      std::cout << current_player->get_name() << " could not play a card and must draw\n\n";
+      current_player->add_card(m_deck->draw_card());
+    }
+    current_player = m_player_list[++m_current_index % 4];
+    ++c;
+    sleep(3); // make the program wait a little so the user can process the changes
   }
+}
+
+void Game::print_top_card() const {
+  std::cout << "Top card is: " << *peek_top_discard() << std::endl;
 }
 
 void Game::print_discard_pile() const {
@@ -38,10 +59,16 @@ void Game::deal_first_card() {
   m_discard_pile.push_back(m_deck->draw_card());
   if (peek_top_discard()->get_color() == NONE) {
     // std::cout << "First card was a WILD card! Trying again!\n";
+
+    // In the rare chance that there were 2 or more wild cards drawn back-to-back
+    for (Card *c : m_discard_pile) {
+      m_deck->get_deck().push_back(m_discard_pile[0]);
+      m_discard_pile.erase(m_discard_pile.begin());
+    }
+    m_deck->shuffle();
     deal_first_card();
   }
   else {
-    // print_discard_pile();
     valid_color = peek_top_discard()->get_color();
     valid_rank = peek_top_discard()->get_rank();
   }
@@ -89,11 +116,11 @@ void Game::setup() {
    * Direction is set to FORWARD
    * Game state switches to PLAY phase
    */
+  direction = FORWARD;
   deal_initial_hand();
   current_player = get_first_player();
   deal_first_card();
-  std::cout << "Top card is: " << *peek_top_discard() << std::endl;
-  std::cout << "Player " << current_player->get_name() << "'s turn!\n";
+  game_state = PLAY;
 }
 
 // GETTERS

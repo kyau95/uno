@@ -32,6 +32,7 @@ public:
   // Getters
   const Color get_color() const;
   const Rank get_rank() const;
+  const int get_number() const;
 
   friend std::ostream &operator<<(std::ostream &out, const Card &rhs) {
     switch (rhs.m_color) {

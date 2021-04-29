@@ -34,3 +34,5 @@ bool Card::operator!=(const Card &rhs) {
 const Color Card::get_color() const { return m_color; }
 
 const Rank Card::get_rank() const { return m_rank; }
+
+const int Card::get_number() const { return m_number; }

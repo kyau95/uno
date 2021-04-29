@@ -47,14 +47,14 @@ private:
 
   static const size_t INITIAL_HAND_SIZE = 7;
 
-  void print_discard_pile() const;
   void deal_first_card();
-  Card *peek_top_discard() const;
   void deal_initial_hand();
   Player *get_first_player();
+  Card *peek_top_discard() const;
+  void print_discard_pile() const;
+  void print_top_card() const;
   void reset_game();
   void setup();
-
 };
 
 #endif // GAME_H

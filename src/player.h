@@ -25,6 +25,9 @@ public:
   void add_cards(std::vector<Card *> cards);
   void clear_hand();
   Card *play_card(int pos);
+  int find_valid_card(Card *current_card);
+
+  void show_hand() const;
 
   bool has_uno() const;
   bool has_empty_hand() const;

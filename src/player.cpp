@@ -42,6 +42,32 @@ void Player::clear_hand() {
   m_hand.clear();
 }
 
+Card *Player::play_card(int pos) {
+  Card *temp = m_hand[pos];
+  m_hand.erase(m_hand.begin() + pos);
+  return temp;
+}
+
+int Player::find_valid_card(Card *current_card) {
+  // Return the first valid card found in the hand
+  for (int i = 0; i < m_hand.size(); ++i) {
+    Card *active = m_hand[i];
+    if (current_card->get_color() == active->get_color())
+      return i;
+    else if (current_card->get_rank() == NUMBER && active->get_rank() == NUMBER &&
+        current_card->get_number() == active->get_number())
+      return i;
+  }
+  // Indicates no matching cards in hand and player will need to draw
+  return -1;
+}
+
+void Player::show_hand() const {
+  for (Card *card : m_hand)
+    std::cout << *card << ' ';
+  std::cout << std::endl;
+}
+
 bool Player::has_uno() const { return m_hand.size() == 1; }
 
 bool Player::has_empty_hand() const { return m_hand.empty(); }
