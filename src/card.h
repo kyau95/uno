@@ -29,6 +29,10 @@ public:
   bool operator==(const Card &rhs);
   bool operator!=(const Card &rhs);
 
+  bool is_number_card() const;
+  bool is_action_card() const;
+  bool is_wild_card() const;
+
   // Getters
   const Color get_color() const;
   const Rank get_rank() const;
@@ -78,7 +82,7 @@ public:
 
   static const Color m_colors[];
   static const Rank m_ranks[];
-
+  static const std::string m_color_strings[];
 private:
   Color m_color;
   Rank m_rank;

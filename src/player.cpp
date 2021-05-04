@@ -42,24 +42,53 @@ void Player::clear_hand() {
   m_hand.clear();
 }
 
-Card *Player::play_card(int pos) {
-  Card *temp = m_hand[pos];
-  m_hand.erase(m_hand.begin() + pos);
-  return temp;
+Color Player::find_optimal_color() {
+  // frequency order is RED, GREEN, BLUE, YELLOW
+  int color_freq[4]{0};
+  for (Card *card : m_hand) {
+    ++color_freq[card->get_color()];
+    for (int x : color_freq) {
+      std::cout << x << ' ';
+    }
+    std::cout << std::endl;
+  }
+  int most_freq_color = 0;
+  for (int x : color_freq) {
+    most_freq_color = std::max(x, most_freq_color);
+  }
+  return static_cast<Color>(most_freq_color);
 }
 
 int Player::find_valid_card(Card *current_card) {
   // Return the first valid card found in the hand
   for (int i = 0; i < m_hand.size(); ++i) {
     Card *active = m_hand[i];
-    if (current_card->get_color() == active->get_color())
+    // Check for Wild cards first
+    if (active->get_color() == NONE) {
       return i;
-    else if (current_card->get_rank() == NUMBER && active->get_rank() == NUMBER &&
-        current_card->get_number() == active->get_number())
+    }
+    // Check for matching colors
+    else if (active->get_color() == current_card->get_color()) {
       return i;
+    }
+    // Top card is a number card, looking for matching number
+    else if (active->get_rank() == NUMBER == current_card->get_rank() == NUMBER) {
+      if (current_card->get_number() == active->get_number()) {
+        return i;
+      }
+    }
+    else if (active->get_rank() == current_card->get_rank()) {
+      return i;
+    }
   }
   // Indicates no matching cards in hand and player will need to draw
   return -1;
+}
+
+Card *Player::play_card(int pos) {
+  Card *temp = m_hand[pos];
+  m_hand.erase(m_hand.begin() + pos);
+  return temp;
 }
 
 void Player::show_hand() const {

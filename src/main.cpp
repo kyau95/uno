@@ -14,5 +14,11 @@
 int main() {
   Game uno_game;
   uno_game.run();
+  std::cout << uno_game << std::endl;
+  //Card *reverse = new Card(RED, NUMBER, 1);
+  //Card *skip = new Card(RED, NUMBER, 1);
+  //std::cout << reverse->matching_action(skip) << std::endl;
+  //std::cout << reverse->matching_color(skip) << std::endl;
+  //std::cout << reverse->matching_number(skip) << std::endl;
   return 0;
 }

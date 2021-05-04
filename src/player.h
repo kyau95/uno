@@ -10,9 +10,6 @@
 #include <string>
 #include <vector>
 
-/**
- *
- */
 class Player {
 public:
   Player(std::string name);
@@ -24,9 +21,9 @@ public:
   void add_card(Card *card);
   void add_cards(std::vector<Card *> cards);
   void clear_hand();
-  Card *play_card(int pos);
+  Color find_optimal_color();
   int find_valid_card(Card *current_card);
-
+  Card *play_card(int pos);
   void show_hand() const;
 
   bool has_uno() const;

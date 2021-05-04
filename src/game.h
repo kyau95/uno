@@ -40,21 +40,24 @@ private:
   std::vector<Card *> m_discard_pile;
   std::vector<Player *> m_player_list{new Player("P1"), new Player("P2"),
                                       new Player("P3"), new Player("P4")};
-  Direction direction;
-  State game_state;
-  Color valid_color;
-  Rank valid_rank;
+  Direction m_direction;
+  State m_game_state;
+  Color m_valid_color;
+  Rank m_valid_rank;
+  int m_valid_number;
 
   static const size_t INITIAL_HAND_SIZE = 7;
 
   void deal_first_card();
   void deal_initial_hand();
+  Card *draw_until_valid_card(Player *current_player, Card *top_card);
   Player *get_first_player();
   Card *peek_top_discard() const;
   void print_discard_pile() const;
   void print_top_card() const;
   void reset_game();
   void setup();
+  void wild_card_change_color();
 };
 
 #endif // GAME_H
