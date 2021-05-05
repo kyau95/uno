@@ -63,15 +63,17 @@ void Deck::shuffle() {
 
 void Deck::replace_deck(std::vector<Card *> discards) {
   // Checking for self-allocation
-  if (m_cards == discards)
+  if (m_cards == discards) {
     throw std::logic_error("Invalid deck argument, Attempted self-allocation");
+  }
   m_cards = discards;
 }
 
 Card *Deck::draw_card() {
   // Draw from empty deck bad, should have already replaced the deck
-  if (m_cards.empty())
+  if (m_cards.empty()) {
     throw std::invalid_argument("Cannot draw from empty deck");
+  }
 
   // end() points to nullptr, - 1 is the final non-null element in vector
   Card *temp = *(m_cards.end() - 1);
@@ -81,8 +83,9 @@ Card *Deck::draw_card() {
 
 std::vector<Card *> Deck::draw_cards(int number_cards) {
   // Not enough cards in deck bad, should have already replaced the deck
-  if (m_cards.size() < number_cards)
+  if (m_cards.size() < number_cards) {
     throw std::invalid_argument("Not enough cards to draw from deck");
+  }
 
   // TODO: Maybe could just pass the current hand vector in?
   // Or keep as is, dunno yet
@@ -97,8 +100,9 @@ std::vector<Card *> Deck::draw_cards(int number_cards) {
 }
 
 void Deck::clear_deck() {
-  for (Card *c : m_cards)
+  for (Card *c : m_cards) {
     delete c;
+  }
 }
 
 // GETTERS

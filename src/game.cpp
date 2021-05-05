@@ -7,7 +7,9 @@
 #include <random>
 #include <unistd.h>
 
-Game::Game() : m_game_state(SETUP), m_direction(FORWARD) { m_deck = new Deck(); }
+Game::Game() : m_game_state(SETUP), m_direction(FORWARD) {
+  m_deck = new Deck();
+}
 
 Game::~Game() {
   for (Player *p : m_player_list)
@@ -20,15 +22,10 @@ Game::~Game() {
 void Game::run() {
   setup();
   int c = 0;
-  while (m_game_state != QUIT && c < 49) {
+  while (m_game_state != GAMEOVER) {
     std::cout << "It's " << current_player->get_name() << "'s turn!\n";
-    // std::cout << "Most frequent color in " << current_player->get_name()
-    //<< "'s hand is "
-    //<< Card::m_color_strings[current_player->find_optimal_color()]
-    //<< '\n';
     print_top_card();
-    std::cout << current_player->get_name() << "'s hand\n";
-    current_player->show_hand();
+    show_player_hand();
     int player_card_choice =
         current_player->find_valid_card(peek_top_discard());
     Card *temp;
@@ -36,20 +33,34 @@ void Game::run() {
       std::cout << current_player->get_name()
                 << " could not play a card and must draw\n\n";
       temp = draw_until_valid_card(current_player, peek_top_discard());
-    } else {
+    } 
+    else {
       temp = current_player->play_card(player_card_choice);
     }
     std::cout << current_player->get_name() << " played " << *temp << "\n\n";
     m_discard_pile.push_back(temp);
 
-    if (current_player->has_uno())
-      std::cout << current_player->get_name() << " declares UNO!\n";
+    if (temp->is_action_card() || temp->is_wild_card()) {
+      activate_card_effect();
+    }
+
+    if (current_player->has_uno()) {
+      std::cout << current_player->get_name() << " declares UNO!\n\n";
+    }
+    else if (current_player->has_empty_hand()) {
+      std::cout << current_player->get_name() << " has won the game of UNO!\n\n"; 
+      m_game_state = GAMEOVER;
+    }
 
     current_player = m_player_list[++m_current_index % 4];
     ++c;
     usleep(1500000); // make the program wait a little so the user can process
                      // the changes
   }
+}
+
+void Game::activate_card_effect() {
+
 }
 
 void Game::deal_first_card() {
@@ -67,7 +78,8 @@ void Game::deal_first_card() {
     }
     m_deck->shuffle();
     deal_first_card();
-  } else {
+  } 
+  else {
     m_valid_color = peek_top_discard()->get_color();
     m_valid_rank = peek_top_discard()->get_rank();
   }
@@ -84,6 +96,12 @@ Card *Game::draw_until_valid_card(Player *current_player, Card *top_card) {
   Card *check;
   int card_counter = 0;
   do {
+    if (m_deck->get_deck().empty()) {
+      std::cout << "Draw deck is empty, replacing cards and shuffling\n\n";
+      m_deck->replace_deck(m_discard_pile);
+      m_discard_pile.clear();
+      m_deck->shuffle();
+    }
     check = m_deck->draw_card();
     current_player->add_card(check);
     ++card_counter;
@@ -104,8 +122,9 @@ Player *Game::get_first_player() {
 }
 
 void Game::print_discard_pile() const {
-  for (Card *card : m_discard_pile)
+  for (Card *card : m_discard_pile) {
     std::cout << *card << ' ';
+  }
   std::cout << '\n';
 }
 
@@ -118,11 +137,13 @@ Card *Game::peek_top_discard() const {
 }
 
 void Game::reset_game() {
-  for (Card *card : m_discard_pile)
+  for (Card *card : m_discard_pile) {
     delete card;
+  }
   m_discard_pile.clear();
-  for (Player *player : m_player_list)
+  for (Player *player : m_player_list) {
     player->clear_hand();
+  }
   m_player_list.clear();
   m_player_list = {new Player("P1"), new Player("P2"), new Player("P3"),
                    new Player("P4")};
@@ -147,7 +168,13 @@ void Game::setup() {
   m_game_state = PLAY;
 }
 
-void Game::wild_card_change_color() {}
+void Game::show_player_hand() const {
+  std::cout << current_player->get_name() << "'s hand\n";
+  current_player->show_hand();
+}
+
+void Game::wild_card_change_color(Color optimal_color) {
+}
 
 // GETTERS
 

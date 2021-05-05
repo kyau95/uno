@@ -36,17 +36,11 @@ bool Card::operator!=(const Card &rhs) {
          m_number != rhs.m_number;
 }
 
-bool Card::is_number_card() const {
-  return m_rank == NUMBER;
-}
+bool Card::is_number_card() const { return m_rank == NUMBER; }
 
-bool Card::is_action_card() const {
-  return m_rank != NUMBER;
-}
+bool Card::is_action_card() const { return m_rank != NUMBER; }
 
-bool Card::is_wild_card() const {
-  return m_color == NONE;
-}
+bool Card::is_wild_card() const { return m_color == NONE; }
 
 // GETTERS
 

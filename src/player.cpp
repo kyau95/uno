@@ -47,16 +47,16 @@ Color Player::find_optimal_color() {
   int color_freq[4]{0};
   for (Card *card : m_hand) {
     ++color_freq[card->get_color()];
-    for (int x : color_freq) {
-      std::cout << x << ' ';
+  }
+  int most_freq = color_freq[0];
+  int color_index = 0;
+  for (int i = 1; i < 4; ++i) {
+    if (color_freq[i] > most_freq) {
+      most_freq = color_freq[i];
+      color_index = i;
     }
-    std::cout << std::endl;
   }
-  int most_freq_color = 0;
-  for (int x : color_freq) {
-    most_freq_color = std::max(x, most_freq_color);
-  }
-  return static_cast<Color>(most_freq_color);
+  return Card::m_colors[color_index];
 }
 
 int Player::find_valid_card(Card *current_card) {

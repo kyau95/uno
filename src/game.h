@@ -48,6 +48,7 @@ private:
 
   static const size_t INITIAL_HAND_SIZE = 7;
 
+  void activate_card_effect();
   void deal_first_card();
   void deal_initial_hand();
   Card *draw_until_valid_card(Player *current_player, Card *top_card);
@@ -57,7 +58,8 @@ private:
   void print_top_card() const;
   void reset_game();
   void setup();
-  void wild_card_change_color();
+  void show_player_hand() const;
+  void wild_card_change_color(Color optimal_color);
 };
 
 #endif // GAME_H
