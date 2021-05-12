@@ -5,47 +5,47 @@
 
 #include "player.h"
 
-Player::Player(std::string name) : m_name(name) {}
+Player::Player(std::string name) : _name(name) {}
 
 Player::~Player() { clear_hand(); }
 
 Player::Player(const Player &rhs) {
-  m_name = rhs.m_name;
-  m_hand = rhs.m_hand;
+  _name = rhs._name;
+  _hand = rhs._hand;
 }
 
 Player &Player::operator=(const Player &rhs) {
   // No self-assignment
   if (this != &rhs) {
-    m_name = rhs.m_name;
-    m_hand = rhs.m_hand;
+    _name = rhs._name;
+    _hand = rhs._hand;
   }
   return *this;
 }
 
 void Player::add_card(Card *card) {
   // Just add one singular card, no biggie
-  m_hand.push_back(card);
+  _hand.push_back(card);
 }
 
 void Player::add_cards(std::vector<Card *> cards) {
   // Adding multiple cards, no biggie
   for (Card *element : cards) {
-    m_hand.push_back(element);
+    _hand.push_back(element);
   }
 }
 
 void Player::clear_hand() {
-  for (Card *card : m_hand) {
+  for (Card *card : _hand) {
     delete card;
   }
-  m_hand.clear();
+  _hand.clear();
 }
 
 Color Player::find_optimal_color() {
   // frequency order is RED, GREEN, BLUE, YELLOW
   int color_freq[4]{0};
-  for (Card *card : m_hand) {
+  for (Card *card : _hand) {
     ++color_freq[card->get_color()];
   }
   int most_freq = color_freq[0];
@@ -56,13 +56,13 @@ Color Player::find_optimal_color() {
       color_index = i;
     }
   }
-  return Card::m_colors[color_index];
+  return Card::_colors[color_index];
 }
 
 int Player::find_valid_card(Card *current_card) {
   // Return the first valid card found in the hand
-  for (int i = 0; i < m_hand.size(); ++i) {
-    Card *active = m_hand[i];
+  for (int i = 0; i < _hand.size(); ++i) {
+    Card *active = _hand[i];
     // Check for Wild cards first
     if (active->get_color() == NONE) {
       return i;
@@ -86,23 +86,23 @@ int Player::find_valid_card(Card *current_card) {
 }
 
 Card *Player::play_card(int pos) {
-  Card *temp = m_hand[pos];
-  m_hand.erase(m_hand.begin() + pos);
+  Card *temp = _hand[pos];
+  _hand.erase(_hand.begin() + pos);
   return temp;
 }
 
 void Player::show_hand() const {
-  for (Card *card : m_hand)
+  for (Card *card : _hand)
     std::cout << *card << ' ';
   std::cout << std::endl;
 }
 
-bool Player::has_uno() const { return m_hand.size() == 1; }
+bool Player::has_uno() const { return _hand.size() == 1; }
 
-bool Player::has_empty_hand() const { return m_hand.empty(); }
+bool Player::has_empty_hand() const { return _hand.empty(); }
 
 // GETTERS
 
-std::string Player::get_name() const { return m_name; }
+std::string Player::get_name() const { return _name; }
 
-std::vector<Card *> Player::get_hand() const { return m_hand; }
+std::vector<Card *> Player::get_hand() const { return _hand; }

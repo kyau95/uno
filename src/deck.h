@@ -28,7 +28,7 @@ public:
 
   // printing
   friend std::ostream &operator<<(std::ostream &out, const Deck &rhs) {
-    for (Card *c : rhs.m_cards) {
+    for (Card *c : rhs._cards) {
       out << *c << ' ';
     }
     out << '\n';
@@ -36,7 +36,7 @@ public:
   }
 
 private:
-  std::vector<Card *> m_cards;
+  std::vector<Card *> _cards;
 
   void build_deck();
 };

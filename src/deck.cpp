@@ -16,32 +16,32 @@ Deck::~Deck() { clear_deck(); }
 
 // Build the entire deck of UNO cards
 void Deck::build_deck() {
-  for (Card *c : m_cards)
+  for (Card *c : _cards)
     delete c;
 
-  m_cards.clear();
+  _cards.clear();
   for (int i = 0; i < 4; ++i) {
-    Color current_color = Card::m_colors[i];
+    Color current_color = Card::_colors[i];
 
     // Create one [0] card for all colors
-    m_cards.push_back(new Card(current_color, 0));
+    _cards.push_back(new Card(current_color, 0));
 
     // Create two of each numbers [1-9] for all colors
     for (int j = 1; j <= 9; ++j) {
-      m_cards.push_back(new Card(current_color, j));
-      m_cards.push_back(new Card(current_color, j));
+      _cards.push_back(new Card(current_color, j));
+      _cards.push_back(new Card(current_color, j));
     }
 
     // Create two of each action cards [skip, reverse, +2] for all colors
     for (int j = 1; j <= 3; ++j) {
-      m_cards.push_back(new Card(current_color, Card::m_ranks[j]));
-      m_cards.push_back(new Card(current_color, Card::m_ranks[j]));
+      _cards.push_back(new Card(current_color, Card::_ranks[j]));
+      _cards.push_back(new Card(current_color, Card::_ranks[j]));
     }
   }
   // Create the wild cards
   for (int i = 0; i < 4; ++i) {
-    m_cards.push_back(new Card(Color::NONE, Rank::WILD));
-    m_cards.push_back(new Card(Color::NONE, Rank::WILD_FOUR));
+    _cards.push_back(new Card(Color::NONE, Rank::WILD));
+    _cards.push_back(new Card(Color::NONE, Rank::WILD_FOUR));
   }
 }
 
@@ -51,39 +51,39 @@ void Deck::shuffle() {
   // cards
   std::random_device device;
   std::mt19937 r_gen(device());
-  std::uniform_int_distribution<int> dist(0, m_cards.size() - 1);
+  std::uniform_int_distribution<int> dist(0, _cards.size() - 1);
 
-  for (int i = 0; i < m_cards.size(); ++i) {
+  for (int i = 0; i < _cards.size(); ++i) {
     int x = dist(r_gen);
-    Card *temp = m_cards[i];
-    m_cards[i] = m_cards[x];
-    m_cards[x] = temp;
+    Card *temp = _cards[i];
+    _cards[i] = _cards[x];
+    _cards[x] = temp;
   }
 }
 
 void Deck::replace_deck(std::vector<Card *> discards) {
   // Checking for self-allocation
-  if (m_cards == discards) {
+  if (_cards == discards) {
     throw std::logic_error("Invalid deck argument, Attempted self-allocation");
   }
-  m_cards = discards;
+  _cards = discards;
 }
 
 Card *Deck::draw_card() {
   // Draw from empty deck bad, should have already replaced the deck
-  if (m_cards.empty()) {
+  if (_cards.empty()) {
     throw std::invalid_argument("Cannot draw from empty deck");
   }
 
   // end() points to nullptr, - 1 is the final non-null element in vector
-  Card *temp = *(m_cards.end() - 1);
-  m_cards.pop_back();
+  Card *temp = *(_cards.end() - 1);
+  _cards.pop_back();
   return temp;
 }
 
 std::vector<Card *> Deck::draw_cards(int number_cards) {
   // Not enough cards in deck bad, should have already replaced the deck
-  if (m_cards.size() < number_cards) {
+  if (_cards.size() < number_cards) {
     throw std::invalid_argument("Not enough cards to draw from deck");
   }
 
@@ -91,22 +91,22 @@ std::vector<Card *> Deck::draw_cards(int number_cards) {
   // Or keep as is, dunno yet
   std::vector<Card *> container;
   for (int i = 0; i < number_cards; ++i) {
-    int n = m_cards.size() - 1;
-    Card *temp = m_cards[n];
+    int n = _cards.size() - 1;
+    Card *temp = _cards[n];
     container.push_back(temp);
-    m_cards.pop_back();
+    _cards.pop_back();
   }
   return container;
 }
 
 void Deck::clear_deck() {
-  for (Card *c : m_cards) {
+  for (Card *c : _cards) {
     delete c;
   }
 }
 
 // GETTERS
 
-std::vector<Card *> Deck::get_deck() const { return m_cards; }
+std::vector<Card *> Deck::get_deck() const { return _cards; }
 
-size_t Deck::get_size() const { return m_cards.size(); }
+size_t Deck::get_size() const { return _cards.size(); }

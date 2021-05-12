@@ -35,18 +35,18 @@ public:
 
   // Print information of player
   friend std::ostream &operator<<(std::ostream &out, const Player &rhs) {
-    out << "Player: " << rhs.m_name << " has " << rhs.m_hand.size()
+    out << "Player: " << rhs._name << " has " << rhs._hand.size()
         << " cards left\n";
     out << "Cards: ";
-    for (Card *c : rhs.m_hand) {
+    for (Card *c : rhs._hand) {
       out << *c << ' ';
     }
     return out;
   }
 
 private:
-  std::string m_name;
-  std::vector<Card *> m_hand;
+  std::string _name;
+  std::vector<Card *> _hand;
 };
 
 #endif // PLAYER_H

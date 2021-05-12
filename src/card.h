@@ -39,7 +39,7 @@ public:
   const int get_number() const;
 
   friend std::ostream &operator<<(std::ostream &out, const Card &rhs) {
-    switch (rhs.m_color) {
+    switch (rhs._color) {
     case RED:
       out << "\033[31m";
       break;
@@ -56,9 +56,9 @@ public:
       out << "\033[1m";
       break;
     }
-    switch (rhs.m_rank) {
+    switch (rhs._rank) {
     case NUMBER:
-      out << rhs.m_number;
+      out << rhs._number;
       break;
     case SKIP:
       out << "S";
@@ -80,13 +80,13 @@ public:
     return out;
   }
 
-  static const Color m_colors[];
-  static const Rank m_ranks[];
-  static const std::string m_color_strings[];
+  static const Color _colors[];
+  static const Rank _ranks[];
+  static const std::string _color_strings[];
 private:
-  Color m_color;
-  Rank m_rank;
-  int m_number;
+  Color _color;
+  Rank _rank;
+  int _number;
 };
 
 #endif // CARD_H
