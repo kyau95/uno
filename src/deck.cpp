@@ -16,9 +16,6 @@ Deck::~Deck() { clear_deck(); }
 
 // Build the entire deck of UNO cards
 void Deck::build_deck() {
-  for (Card *c : _cards)
-    delete c;
-
   _cards.clear();
   for (int i = 0; i < 4; ++i) {
     Color current_color = Card::_colors[i];

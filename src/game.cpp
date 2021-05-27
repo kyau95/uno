@@ -28,7 +28,8 @@ void Game::run() {
       std::cout << _current_player->get_name()
                 << " could not play a card and must draw\n\n";
       temp = draw_until_valid_card(_current_player, peek_top_discard());
-    } else {
+    }
+    else {
       temp = _current_player->play_card(player_card_choice);
     }
     std::cout << _current_player->get_name() << " played " << *temp << "\n\n";
@@ -40,7 +41,8 @@ void Game::run() {
 
     if (_current_player->has_uno()) {
       std::cout << _current_player->get_name() << " declares UNO!\n\n";
-    } else if (_current_player->has_empty_hand()) {
+    }
+    else if (_current_player->has_empty_hand()) {
       declare_winner();
     }
     advance_next_player();
@@ -55,18 +57,26 @@ void Game::activate_action_effect(Card *top_card) {
   Rank rank = top_card->get_rank();
   if (rank == SKIP) {
     advance_next_player();
-  } else if (rank == REVERSE) {
+    std::cout << _current_player->get_name() << "'s turn skipped!\n\n";
+  }
+  else if (rank == REVERSE) {
     // Flip the bit 1 -> 0 or 0 -> 1, need to cast back to enum type
     _direction = static_cast<Direction>(_direction ^ 1);
-  } else if (rank == DRAW_TWO) {
+    std::cout << "Direction REVERSED\n\n";
+  }
+  else if (rank == DRAW_TWO) {
     _current_player->add_cards(_deck->draw_cards(2));
     advance_next_player();
-  } else if (rank == WILD) {
+    std::cout << _current_player->get_name() << " has to draw 2 cards!\n\n";
+  }
+  else if (rank == WILD) {
     activate_wild_effect(peek_top_discard());
-  } else {
-    activate_action_effect(peek_top_discard());
-    //_current_player->add_cards(_deck->draw_cards(4));
-    // advance_next_player();
+  }
+  else {
+    activate_wild_effect(peek_top_discard());
+    _current_player->add_cards(_deck->draw_cards(4));
+    advance_next_player();
+    std::cout << _current_player->get_name() << " has to draw 4 cards!\n\n";
   }
 }
 
@@ -102,7 +112,8 @@ void Game::deal_first_card() {
     }
     _deck->shuffle();
     deal_first_card();
-  } else {
+  }
+  else {
     _valid_color = peek_top_discard()->get_color();
     _valid_rank = peek_top_discard()->get_rank();
   }
