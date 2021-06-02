@@ -10,10 +10,12 @@
 Game::Game() : _game_state(SETUP), _direction(FORWARD) { _deck = new Deck(); }
 
 Game::~Game() {
-  for (Player *p : _player_list)
+  for (Player *p : _player_list) {
     delete p;
-  for (Card *c : _discard_pile)
+  }
+  for (Card *c : _discard_pile) {
     delete c;
+  }
   delete _deck;
 }
 
@@ -34,11 +36,9 @@ void Game::run() {
     }
     std::cout << _current_player->get_name() << " played " << *temp << "\n\n";
     _discard_pile.push_back(temp);
-
     if (temp->is_action_card() || temp->is_wild_card()) {
       activate_action_effect(peek_top_discard());
     }
-
     if (_current_player->has_uno()) {
       std::cout << _current_player->get_name() << " declares UNO!\n\n";
     }
@@ -52,8 +52,6 @@ void Game::run() {
 }
 
 void Game::activate_action_effect(Card *top_card) {
-  // TODO: Something broke here, most likely in the DRAW_TWO and WILD_FOUR
-  // section in regards to drawing additonal cards
   Rank rank = top_card->get_rank();
   if (rank == SKIP) {
     advance_next_player();
@@ -65,7 +63,12 @@ void Game::activate_action_effect(Card *top_card) {
     std::cout << "Direction REVERSED\n\n";
   }
   else if (rank == DRAW_TWO) {
-    _current_player->add_cards(_deck->draw_cards(2));
+    if (!deck_has_enough_cards(2)) {
+      _deck->replace_deck(_discard_pile);
+    }
+    else {
+      _current_player->add_cards(_deck->draw_cards(2));
+    }
     advance_next_player();
     std::cout << _current_player->get_name() << " has to draw 2 cards!\n\n";
   }
@@ -74,7 +77,12 @@ void Game::activate_action_effect(Card *top_card) {
   }
   else {
     activate_wild_effect(peek_top_discard());
-    _current_player->add_cards(_deck->draw_cards(4));
+    if (!deck_has_enough_cards(4)) {
+      _deck->replace_deck(_discard_pile);
+    }
+    else {
+      _current_player->add_cards(_deck->draw_cards(4));
+    }
     advance_next_player();
     std::cout << _current_player->get_name() << " has to draw 4 cards!\n\n";
   }
@@ -90,10 +98,13 @@ void Game::activate_wild_effect(Card *top_card) {
 void Game::advance_next_player() {
   switch (_direction) {
   case FORWARD:
-    _current_player = _player_list[++_current_index % 4];
+    _current_index = (_current_index + 1) % 4;
+    _current_player = _player_list[_current_index];
     break;
   case BACKWARD:
-    _current_player = _player_list[--_current_index % 4];
+    _current_index = (_current_index - 1) % 4;
+    _current_index = (_current_index < 0) ? 3 : _current_index;
+    _current_player = _player_list[_current_index];
     break;
   default:
     break;
@@ -127,6 +138,10 @@ void Game::deal_initial_hand() {
 void Game::declare_winner() {
   std::cout << _current_player->get_name() << " has won the game of UNO!\n\n";
   _game_state = GAMEOVER;
+}
+
+bool Game::deck_has_enough_cards(int num_cards_to_draw) const {
+  return _deck->get_size() >= num_cards_to_draw;
 }
 
 Card *Game::draw_until_valid_card(Player *_current_player, Card *top_card) {
@@ -195,7 +210,7 @@ void Game::reset_game() {
 void Game::setup() {
   /* STUFF THAT HAPPENS BEFORE FOR THE GAME EVEN STARTS
    * Hands are dealt to all players (7 cards each)
-   * TODO: A top card is drawn (must not be a wild card)
+   * A top card is drawn (must not be a wild card)
    * The first player is chosen
    * Direction is set to FORWARD
    * Game state switches to PLAY phase

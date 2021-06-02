@@ -54,6 +54,7 @@ private:
   void deal_first_card();
   void deal_initial_hand();
   void declare_winner();
+  bool deck_has_enough_cards(int num_cards_to_draw) const;
   Card *draw_until_valid_card(Player *current_player, Card *top_card);
   Player *get_first_player();
   Card *peek_top_discard() const;
